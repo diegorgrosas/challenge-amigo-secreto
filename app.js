@@ -1,41 +1,67 @@
 //O principal objetivo deste desafio é fortalecer suas habilidades em lógica de programação. Aqui você deverá desenvolver a lógica para resolver o problema.
 
 let amigosParaSeremSorteados = [];
-
-//function exibirLista(tag, texto){
-//    let campo = document.querySelector(tag);
-//    campo.innerHTML = texto;
-//}
+const lista = document.getElementById('listaAmigos');
+const inputNome = document.getElementById('amigo');
+const resultado = document.getElementById('resultado');
 
 function adicionarAmigo() {
-    let nomeDoAmigo = document.getElementById('input');
+    const nomeDoAmigo = inputNome.value.trim();
     
-    const novoAmigo = nomeDoAmigo.value.trim();
-
-    
-    if (novoAmigo == '') {
-        alert('Digite um nome válido!');
+    if (!nomeDoAmigo) {
+        alert('Por favor, insira um nome!');
         return;
     }
-    amigosParaSeremSorteados.push(novoAmigo);
-    //exibirLista('ul', amigosParaSeremSorteados);
-    const amigoParaSortear = document.getElementById('amigosParaSeremSorteados');
-    const listaDeAmigos = document.creatElement('li');
-    listaDeAmigos.textContent = novoAmigo;
-    amigoParaSortear.appendChild(listaDeAmigos);
-    //console.log(amigosParaSeremSorteados);
-    //limparCampo();
-    nomeDoAmigo.value = '';
-    console.log('lista atual:', amigosParaSeremSorteados);
-    
+
+    if(amigosParaSeremSorteados.includes(nomeDoAmigo)) {
+        alert('Já adicionou esse amigo!');
+        return;
+    }
+
+    amigosParaSeremSorteados.push(nomeDoAmigo);
+    atualizarLista();
+    inputNome.value = '';
+
+    console.log('lista atual:', amigosParaSeremSorteados);  
+
 }
 
-//function limparCampo(){
-//    let addcionar = document.querySelector('input');
-//    addcionar.value = "";
-//}
+function atualizarLista(){
+    lista.innerHTML = ''; 
+
+    amigosParaSeremSorteados.forEach((amigo, index) => {
+        const item = document.createElement('li');
+        item.textContent = amigo;
+
+        const botaoRemover = document.createElement("button");
+        botaoRemover.textContent = "Remover";
+        botaoRemover.classList.add("button-remove"); // Adiciona a classe button-remove
+        botaoRemover.onclick = () => removerAmigo(index);
+
+        item.appendChild(botaoRemover);
+        lista.appendChild(item);
+    });
+}
+
+function removerAmigo(index) {
+    amigosParaSeremSorteados.splice(index, 1);
+    atualizarLista();
+}
 
 function sortearAmigo() {
-    let amigoSorteado = amigosParaSeremSorteados[Math.floor(Math.random() * amigosParaSeremSorteados.length)];
-    exibirLista('h2', amigoSorteado);
+    if (amigosParaSeremSorteados.length === 0) {
+        alert("Adicione pelo menos um amigo para sortear.");
+        return;
+    }
+
+    const amigoSorteado = amigosParaSeremSorteados[Math.floor(Math.random() * amigosParaSeremSorteados.length)];
+    resultado.innerHTML = `<li>O amigo secreto sorteado é: <strong>${amigoSorteado}</strong></li>`;
 }
+
+function limparLista() {
+    amigosParaSeremSorteados = [];
+    atualizarLista();
+    resultado.innerHTML = "";
+}
+
+   
